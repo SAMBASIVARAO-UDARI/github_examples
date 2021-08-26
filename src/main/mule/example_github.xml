@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="92ee9ebc-8272-4225-a05b-c9524f01e74c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="example_githubFlow" doc:id="3f580cb1-f730-420b-b915-4547663a0db5" >
+		<http:listener doc:name="Listener" doc:id="13d4e6b6-0d62-4c34-8773-990f45b9575b" path="/github" config-ref="HTTP_Listener_config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="835346e5-9f2a-46ff-ba32-d8dc3e618978" message="retrive info sam ==#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="b0c3b37d-85d1-4020-90e9-bf3617acda10" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"accno" : 12345,
+	"account name" :  "samba siva",
+	"created time " : now() as String
+} ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0288176f-d38e-4a16-b2b7-687bd8ad736e" message="#[payload]"/>
+	</flow>
+</mule>
